@@ -12,7 +12,7 @@
 services:
   llama:
     build:
-      context: .
+      context: ../..
       dockerfile: containers/Containerfile.ai
     image: llama-cuda
     container_name: llama

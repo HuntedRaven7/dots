@@ -12,7 +12,7 @@
 services:
   hermes:
     build:
-      context: .
+      context: ../..
       dockerfile: containers/Containerfile.hermes
     image: hermes-cuda
     container_name: hermes
@@ -30,7 +30,7 @@ services:
     volumes:
       - hermes-data:/opt/data
     env_file:
-      - containers/hermes.env
+      - hermes.env
 
   dashboard:
     image: hermes-cuda
@@ -42,7 +42,7 @@ services:
     volumes:
       - hermes-data:/opt/data
     env_file:
-      - containers/hermes.env
+      - hermes.env
     command: [ "dashboard", "--host", "127.0.0.1", "--no-open" ]
 
 volumes:

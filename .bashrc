@@ -67,21 +67,19 @@ fi
 alias eff='$EDITOR "$(ff)"'
 sff() { if [ $# -eq 0 ]; then echo "Usage: sff <destination> (e.g. sff host:/tmp/)"; return 1; fi; local file; file=$(find . -type f -printf '%T@\t%p\n' | sort -rn | cut -f2- | ff) && [ -n "$file" ] && scp "$file" "$1"; }
 
-
 # Podman containers (dots repo)
-DOTS="$HOME/git/personal/dots"
-COMPOSE_HERMES="-f $DOTS/containers/hermes/docker-compose.hermes.yml"
-COMPOSE_LLAMA="-f $DOTS/containers/ai/docker-compose.llama.yml"
+COMPOSE_HERMES="$HOME/git/personal/dots/containers/hermes/docker-compose.hermes.yml"
+COMPOSE_LLAMA="$HOME/git/personal/dots/containers/ai/docker-compose.llama.yml"
 
-alias chs="podman $COMPOSE_HERMES up -d"
-alias chd="podman $COMPOSE_HERMES down"
-alias cls="podman $COMPOSE_LLAMA up -d"
-alias cld="podman $COMPOSE_LLAMA down"
-alias cas="podman $COMPOSE_HERMES up -d && podman $COMPOSE_LLAMA up -d"
-alias cad="podman $COMPOSE_HERMES down && podman $COMPOSE_LLAMA down"
-alias clh="podman $COMPOSE_HERMES logs -f"
-alias cll="podman $COMPOSE_LLAMA logs -f"
-alias crh="podman $COMPOSE_HERMES build --no-cache"
-alias crl="podman $COMPOSE_LLAMA build --no-cache"
+alias chs="podman compose -f $COMPOSE_HERMES up -d"
+alias chd="podman compose -f $COMPOSE_HERMES down"
+alias cls="podman compose -f $COMPOSE_LLAMA up -d"
+alias cld="podman compose -f $COMPOSE_LLAMA down"
+alias cas="podman compose -f $COMPOSE_HERMES up -d && podman compose -f $COMPOSE_LLAMA up -d"
+alias cad="podman compose -f $COMPOSE_HERMES down && podman compose -f $COMPOSE_LLAMA down"
+alias clh="podman compose -f $COMPOSE_HERMES logs -f"
+alias cll="podman compose -f $COMPOSE_LLAMA logs -f"
+alias crh="podman compose -f $COMPOSE_HERMES build --no-cache"
+alias crl="podman compose -f $COMPOSE_LLAMA build --no-cache"
 
-unset rc DOTS COMPOSE_HERMES COMPOSE_LLAMA
+unset rc COMPOSE_HERMES COMPOSE_LLAMA
