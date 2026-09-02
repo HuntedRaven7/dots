@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "labels": ["dependencies", "renovate"],
+  "schedule": ["after 6am and before 10pm on weekdays"],
+  "timezone": "UTC",
+  "rebaseWhen": "auto",
+  "packageRules": [
+    {
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
+      "groupName": "CUDA base images",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false,
+      "commitMessageTopic": "CUDA base image"
+    },
+    {
+      "matchManagers": ["homebrew"],
+      "description": "Keep Homebrew packages up to date",
+      "groupName": "Homebrew"
+    }
+  ],
+  "dockerfile": {
+    "fileMatch": ["(^|/)Containerfile($|\\.)", "(^|/)Dockerfile($|\\.)", "^containers/.+Containerfile.*$"]
+  },
+  "homebrew": {
+    "fileMatch": ["^robin\\.Brewfile$"]
+  }
+}

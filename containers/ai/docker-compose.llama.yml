@@ -27,20 +27,26 @@ services:
               capabilities: [gpu]
     volumes:
       - llama-models:/opt/models
-    # Override CMD to add your model + flags:
+    environment:
+      # Keep Hugging Face downloads inside the named llama-models volume
+      # (/opt/models) so the model persists across container lifecycles
+      # instead of an ephemeral anonymous volume.
+      HF_HOME: /opt/models/.cache/huggingface
+      HF_HUB_CACHE: /opt/models/.cache/huggingface/hub
+      HOME: /opt/models
+
     command:
       - "--host"
       - "0.0.0.0"
       - "--port"
       - "8080"
-      - "--model"
-      - "/opt/models/your-model.gguf"
       - "--n-gpu-layers"
       - "999"
       - "--ctx-size"
       - "8192"
       - "--cont-batching"
       - "--flash-attn"
+      - "auto"
 
 volumes:
   llama-models:

@@ -13,11 +13,8 @@
 # Run (without GPU):
 #   podman run -v hermes-data:/opt/data --env-file hermes.env -it hermes-cuda
 
-ARG CUDA_VERSION=12.9.1
-ARG CUDA_VERSION_SHORT=129
-ARG UBUNTU_VERSION=24.04
-
-FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu${UBUNTU_VERSION}
+# CUDA base image (update via Renovate by bumping the tag below):
+FROM nvidia/cuda:12.9.1-devel-ubuntu24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
