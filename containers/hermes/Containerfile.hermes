@@ -1,0 +1,22 @@
+# Dockerfile — Serve NousResearch Hermes with vLLM (OpenAI-compatible API)
+FROM vllm/vllm-openai:latest
+
+# Which Hermes checkpoint to serve. Override at build or run time.
+# Examples:
+#   NousResearch/Hermes-3-Llama-3.1-8B
+#   NousResearch/Hermes-3-Llama-3.1-70B
+#   NousResearch/Hermes-4-14B
+ENV MODEL_NAME="NousResearch/Hermes-3-Llama-3.1-8B"
+
+# Optional: set at `docker run -e HF_TOKEN=...` if the repo is gated/private.
+ENV HF_TOKEN=""
+
+EXPOSE 8000
+
+# vLLM's OpenAI-compatible server. Extra flags can be appended via docker run args.
+ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+CMD ["--model", "NousResearch/Hermes-3-Llama-3.1-8B", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--dtype", "auto", \
+     "--gpu-memory-utilization", "0.90"]
