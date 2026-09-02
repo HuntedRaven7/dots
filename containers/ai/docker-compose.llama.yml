@@ -13,7 +13,7 @@ services:
   llama:
     build:
       context: ../..
-      dockerfile: containers/Containerfile.ai
+      dockerfile: containers/ai/Containerfile.ai
     image: llama-cuda
     container_name: llama
     restart: unless-stopped

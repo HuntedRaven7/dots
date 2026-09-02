@@ -13,7 +13,7 @@ services:
   hermes:
     build:
       context: ../..
-      dockerfile: containers/Containerfile.hermes
+      dockerfile: containers/hermes/Containerfile.hermes
     image: hermes-cuda
     container_name: hermes
     restart: unless-stopped
