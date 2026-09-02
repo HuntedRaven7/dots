@@ -1,0 +1,46 @@
+# docker-compose.llama.yml
+# llama.cpp server with CUDA GPU support.
+#
+# Usage:
+#   podman compose -f containers/docker-compose.llama.yml up -d
+#   docker compose -f containers/docker-compose.llama.yml up -d
+#
+# Download a model into the volume:
+#   docker compose -f containers/docker-compose.llama.yml run --rm llama \
+#     llama download <huggingface-repo> <file.gguf>
+
+services:
+  llama:
+    build:
+      context: .
+      dockerfile: containers/Containerfile.ai
+    image: llama-cuda
+    container_name: llama
+    restart: unless-stopped
+    network_mode: host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - llama-models:/opt/models
+    # Override CMD to add your model + flags:
+    command:
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8080"
+      - "--model"
+      - "/opt/models/your-model.gguf"
+      - "--n-gpu-layers"
+      - "999"
+      - "--ctx-size"
+      - "8192"
+      - "--cont-batching"
+      - "--flash-attn"
+
+volumes:
+  llama-models:

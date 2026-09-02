@@ -1,0 +1,49 @@
+# docker-compose.hermes.yml
+# Hermes Agent with CUDA GPU support.
+#
+# Usage:
+#   cp containers/hermes.env.example containers/hermes.env   # fill in API keys
+#   podman compose -f containers/docker-compose.hermes.yml up -d
+#   docker compose -f containers/docker-compose.hermes.yml up -d
+#
+# Interactive TUI:
+#   podman compose -f containers/docker-compose.hermes.yml run --rm hermes
+
+services:
+  hermes:
+    build:
+      context: .
+      dockerfile: containers/Containerfile.hermes
+    image: hermes-cuda
+    container_name: hermes
+    restart: unless-stopped
+    network_mode: host
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - hermes-data:/opt/data
+    env_file:
+      - containers/hermes.env
+
+  dashboard:
+    image: hermes-cuda
+    container_name: hermes-dashboard
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - hermes
+    volumes:
+      - hermes-data:/opt/data
+    env_file:
+      - containers/hermes.env
+    command: [ "dashboard", "--host", "127.0.0.1", "--no-open" ]
+
+volumes:
+  hermes-data:
