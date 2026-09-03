@@ -2,6 +2,11 @@ tap "anomalyco/tap", trusted: true
 tap "colindean/fonts-nonfree", trusted: true
 tap "ublue-os/experimental-tap", trusted: true
 tap "ublue-os/tap", trusted: true
+cask "jetbrains-toolbox-linux"
+cask "visual-studio-code-linux"
+vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode-remote.remote-ssh"
+vscode "ms-azuretools.vscode-containers"
 brew "atuin"
 brew "bat"
 brew "chezmoi"
