@@ -1,0 +1,52 @@
+# Stage 1: build colibri with the CUDA backend enabled
+FROM nvidia/cuda:12.8.1-devel-ubuntu24.04 AS build
+
+ARG ARCH=x86-64-v3
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      build-essential \
+      make \
+      python3 \
+      python3-pip \
+      git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+RUN git clone https://github.com/JustVugg/colibri.git .
+
+WORKDIR /src/c
+RUN make colibri CUDA=1 CUDA_ARCH=portable ARCH=${ARCH}
+
+# Stage 2: slim runtime (CUDA runtime only)
+FROM nvidia/cuda:12.8.1-runtime-ubuntu24.04
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends python3 libgomp1 && \
+    rm -rf /var/lib/apt/lists/* && \
+    useradd -m -u 1001 colibri
+
+WORKDIR /app
+
+COPY --from=build /src/c/colibri            ./colibri
+COPY --from=build /src/c/coli               ./coli
+COPY --from=build /src/c/version.py         ./version.py
+COPY --from=build /src/c/openai_server.py   ./openai_server.py
+COPY --from=build /src/c/v4_dsml.py         ./v4_dsml.py
+COPY --from=build /src/c/family_registry.py ./family_registry.py
+COPY --from=build /src/c/resource_plan.py   ./resource_plan.py
+COPY --from=build /src/c/doctor.py          ./doctor.py
+COPY --from=build /src/c/autotune.py        ./autotune.py
+COPY --from=build /src/c/tools/             ./tools/
+
+ENV COLI_MODEL=/model \
+    COLI_ENGINE=/app/colibri \
+    COLI_DOCKER_GLM_ONLY=1 \
+    PYTHONUNBUFFERED=1
+
+VOLUME ["/model"]
+EXPOSE 5000
+
+USER colibri
+ENTRYPOINT ["python3", "/app/coli"]
+CMD ["info"]

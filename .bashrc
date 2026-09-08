@@ -67,19 +67,4 @@ fi
 alias eff='$EDITOR "$(ff)"'
 sff() { if [ $# -eq 0 ]; then echo "Usage: sff <destination> (e.g. sff host:/tmp/)"; return 1; fi; local file; file=$(find . -type f -printf '%T@\t%p\n' | sort -rn | cut -f2- | ff) && [ -n "$file" ] && scp "$file" "$1"; }
 
-# Podman containers (dots repo)
-COMPOSE_HERMES="$HOME/git/personal/dots/containers/hermes/docker-compose.hermes.yml"
-COMPOSE_LLAMA="$HOME/git/personal/dots/containers/ai/docker-compose.llama.yml"
-
-alias chs="podman compose -f $COMPOSE_HERMES up -d"
-alias chd="podman compose -f $COMPOSE_HERMES down"
-alias cls="podman compose -f $COMPOSE_LLAMA up -d"
-alias cld="podman compose -f $COMPOSE_LLAMA down"
-alias cas="podman compose -f $COMPOSE_HERMES up -d && podman compose -f $COMPOSE_LLAMA up -d"
-alias cad="podman compose -f $COMPOSE_HERMES down && podman compose -f $COMPOSE_LLAMA down"
-alias clh="podman compose -f $COMPOSE_HERMES logs -f"
-alias cll="podman compose -f $COMPOSE_LLAMA logs -f"
-alias crh="podman compose -f $COMPOSE_HERMES build --no-cache"
-alias crl="podman compose -f $COMPOSE_LLAMA build --no-cache"
-
-unset rc COMPOSE_HERMES COMPOSE_LLAMA
+alias cat='bat --style plain'

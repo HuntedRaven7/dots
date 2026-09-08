@@ -1,0 +1,27 @@
+onboarding = false
+
+[keys]
+prefix = "ctrl+space"
+
+[[keys.command]]
+key = "prefix+shift+k"
+type = "shell"
+command = "~/.config/herdr/scripts/kilo-tab.sh"
+
+[[keys.command]]
+key = "prefix+shift+o"
+type = "shell"
+command = "~/.config/herdr/scripts/opencode-tab.sh"
+
+[theme]
+name = "terminal"
+auto_switch = false
+
+[ui]
+tab_bar_position = "bottom"
+
+[ui.toast]
+delivery = "off"
+
+[ui.sound]
+enabled = false

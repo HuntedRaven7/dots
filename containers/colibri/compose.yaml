@@ -1,0 +1,29 @@
+services:
+  colibri:
+    build:
+      context: .
+      dockerfile: Containerfile
+    image: colibri-cuda
+    container_name: colibri
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - "${MODEL_DIR:?set MODEL_DIR to the int4 model directory}:/model:ro"
+    environment:
+      COLI_RAM: "${COLI_RAM:-24}"
+      # GPU resident pipeline (keeps residual stream on-device across layers)
+      COLI_CUDA: "1"
+      COLI_CUDA_PIPE: "2"
+    command:
+      - serve
+      - --host
+      - 0.0.0.0
+      - --ram
+      - "${COLI_RAM:-24}"
+    deploy:
+      resources:
+        limits:
+          memory: 10G
+          cpus: "8.0"
+    devices:
+      - nvidia.com/gpu=all
